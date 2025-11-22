@@ -49,7 +49,7 @@ A curated collection of **Awesome LLM apps built with RAG, AI Agents, Multi-agen
   <tr>
     <td align="center">
       <a href="https://getunblocked.com/unblocked-mcp/?utm_source=oss&utm_medium=sponsorship&utm_campaign=awesome-llm-apps" target="_blank" rel="noopener" title="Unblocked">
-        <img src="docs/banner/sponsors/unblocked.png" alt="Unblocked" width="6000">
+        <img src="docs/banner/sponsors/unblocked.png" alt="Unblocked" width="500">
       </a>
       <br>
       <a href="https://getunblocked.com/unblocked-mcp/?utm_source=oss&utm_medium=sponsorship&utm_campaign=awesome-llm-apps" target="_blank" rel="noopener" style="text-decoration: none; color: #333; font-weight: bold; font-size: 18px;">
@@ -57,16 +57,41 @@ A curated collection of **Awesome LLM apps built with RAG, AI Agents, Multi-agen
       </a>
     </td>
     <td align="center">
-      <a href="https://sponsorunwindai.com/" title="Sponsor Awesome LLM Apps Repo">
-        <img src="docs/banner/sponsor_awesome_llm_apps.png" alt="Sponsor Awesome LLM Apps Repo" width="6000">
+      <a href="https://okara.ai/?utm_source=oss&utm_medium=sponsorship&utm_campaign=awesome-llm-apps" title="Okara">
+        <img src="docs/banner/sponsors/okara.png" alt="Okara" width="500">
       </a>
       <br>
-      <a href="https://sponsorunwindai.com/" style="text-decoration: none; color: #333; font-weight: bold; font-size: 18px;">
-        Become a Sponsor
+      <a href="https://okara.ai/?utm_source=oss&utm_medium=sponsorship&utm_campaign=awesome-llm-apps" style="text-decoration: none; color: #333; font-weight: bold; font-size: 18px;">
+        Okara AI
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/GibsonAI/Memori" target="_blank" rel="noopener" title="Memori">
+        <img src="docs/banner/sponsors/memorilabs.png" alt="Memori" width="500">
+      </a>
+      <br>
+      <a href="https://github.com/GibsonAI/Memori" target="_blank" rel="noopener" style="text-decoration: none; color: #333; font-weight: bold; font-size: 18px;">
+        Memori
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://dimension.dev/" target="_blank" rel="noopener" title="Dimension AI">
+        <img src="docs/banner/sponsors/dimensions.png" alt="Dimension AI" width="500">
+      </a>
+      <br>
+      <a href="https://dimension.dev/" target="_blank" rel="noopener" style="text-decoration: none; color: #333; font-weight: bold; font-size: 18px;">
+        Dimension AI
       </a>
     </td>
   </tr>
 </table>
+<p align="center">
+  <a href="https://sponsorunwindai.com" target="_blank" rel="noopener">
+    <img src="https://img.shields.io/badge/_Sponsor_Us-FF69B4?style=for-the-badge&logo=github-sponsors&logoColor=white" alt="Sponsor Us">
+  </a>
+</p>
 
 ## 📂 Featured AI Projects
 
@@ -82,18 +107,16 @@ A curated collection of **Awesome LLM apps built with RAG, AI Agents, Multi-agen
 *   [🎵 AI Music Generator Agent](starter_ai_agents/ai_music_generator_agent/)
 *   [🛫 AI Travel Agent (Local & Cloud)](starter_ai_agents/ai_travel_agent/)
 *   [✨ Gemini Multimodal Agent](starter_ai_agents/gemini_multimodal_agent_demo/)
-*   [🌐 Local News Agent (OpenAI Swarm)](starter_ai_agents/local_news_agent_openai_swarm/)
 *   [🔄 Mixture of Agents](starter_ai_agents/mixture_of_agents/)
 *   [📊 xAI Finance Agent](starter_ai_agents/xai_finance_agent/)
 *   [🔍 OpenAI Research Agent](starter_ai_agents/opeani_research_agent/)
-*   [🕸️ Web Scrapping AI Agent (Local & Cloud)](starter_ai_agents/web_scrapping_ai_agent/)
+*   [🕸️ Web Scraping AI Agent (Local & Cloud SDK)](starter_ai_agents/web_scrapping_ai_agent/)
 
 ### 🚀 Advanced AI Agents
-
+*   [🏚️ 🍌 AI Home Renovation Agent with Nano Banana](advanced_ai_agents/multi_agent_apps/ai_home_renovation_agent)
 *   [🔍 AI Deep Research Agent](advanced_ai_agents/single_agent_apps/ai_deep_research_agent/)
 *   [🤝 AI Consultant Agent](advanced_ai_agents/single_agent_apps/ai_consultant_agent)
 *   [🏗️ AI System Architect Agent](advanced_ai_agents/single_agent_apps/ai_system_architect_r1/)
-*   [🎯 AI Lead Generation Agent](advanced_ai_agents/single_agent_apps/ai_lead_generation_agent/)
 *   [💰 AI Financial Coach Agent](advanced_ai_agents/multi_agent_apps/ai_financial_coach_agent/)
 *   [🎬 AI Movie Production Agent](advanced_ai_agents/single_agent_apps/ai_movie_production_agent/)
 *   [📈 AI Investment Agent](advanced_ai_agents/single_agent_apps/ai_investment_agent/)
@@ -123,6 +146,7 @@ A curated collection of **Awesome LLM apps built with RAG, AI Agents, Multi-agen
 *   [👨‍🏫 AI Teaching Agent Team](advanced_ai_agents/multi_agent_apps/agent_teams/ai_teaching_agent_team/)
 *   [💻 Multimodal Coding Agent Team](advanced_ai_agents/multi_agent_apps/agent_teams/multimodal_coding_agent_team/)
 *   [✨ Multimodal Design Agent Team](advanced_ai_agents/multi_agent_apps/agent_teams/multimodal_design_agent_team/)
+*   [🎨 🍌 Multimodal UI/UX Feedback Agent Team with Nano Banana](advanced_ai_agents/multi_agent_apps/agent_teams/multimodal_uiux_feedback_agent_team/)
 *   [🌏 AI Travel Planner Agent Team](/advanced_ai_agents/multi_agent_apps/agent_teams/ai_travel_planner_agent_team/)
 
 ### 🗣️ Voice AI Agents
@@ -177,6 +201,10 @@ A curated collection of **Awesome LLM apps built with RAG, AI Agents, Multi-agen
 *   [📝 Chat with Substack](advanced_llm_apps/chat_with_X_tutorials/chat_with_substack/)
 *   [📽️ Chat with YouTube Videos](advanced_llm_apps/chat_with_X_tutorials/chat_with_youtube_videos/)
 
+### 🎯 LLM Optimization Tools
+
+*   [🎯 Toonify Token Optimization](advanced_llm_apps/llm_optimization_tools/toonify_token_optimization/) - Reduce LLM API costs by 30-60% using TOON format
+
 ### 🔧 LLM Fine-tuning Tutorials
 
 * <img src="https://cdn.simpleicons.org/google"  alt="google logo" width="20" height="15"> [Gemma 3 Fine-tuning](advanced_llm_apps/llm_finetuning_tutorials/gemma3_finetuning/)
@@ -221,9 +249,6 @@ A curated collection of **Awesome LLM apps built with RAG, AI Agents, Multi-agen
 
 4. **Follow the project-specific instructions** in each project's `README.md` file to set up and run the app.
 
-## 🤝 Contributing to Open Source
-
-Contributions are welcome! If you have any ideas, improvements, or new apps to add, please create a new [GitHub Issue](https://github.com/Shubhamsaboo/awesome-llm-apps/issues) or submit a pull request. Make sure to follow the existing project structure and include a detailed `README.md` for each new app.
 
 ### <img src="https://cdn.simpleicons.org/github"  alt="github logo" width="25" height="20"> Thank You, Community, for the Support! 🙏
 

@@ -14,7 +14,7 @@ A terminal-based Notion Agent for interacting with your Notion pages using natur
 
 ## Prerequisites
 
-- Python 3.9+
+- Python 3.10+
 - A Notion account with admin permissions
 - A Notion Integration token
 - An OpenAI API key
@@ -106,7 +106,3 @@ You can exit the conversation at any time by typing `exit`, `quit`, `bye`, or `g
 - "Add a comment to the first paragraph saying 'This looks good!'"
 - "Search for any mentions of meetings"
 - "Summarize our conversation so far"
-
-## License
-
-MIT

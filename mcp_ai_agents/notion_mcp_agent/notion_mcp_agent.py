@@ -7,7 +7,7 @@ from textwrap import dedent
 from agno.agent import Agent 
 from agno.models.openai import OpenAIChat
 from agno.tools.mcp import MCPTools 
-from agno.memory.v2 import Memory
+from agno.db.sqlite import SqliteDb
 from mcp import StdioServerParameters
 from dotenv import load_dotenv
 
@@ -27,6 +27,7 @@ async def main():
     openai_api_key = OPENAI_API_KEY
     
     # Prompt for page ID first
+    page_id = None
     if len(sys.argv) > 1:
         # Use command-line argument if provided
         page_id = sys.argv[1]
@@ -39,12 +40,13 @@ async def main():
         
         user_input = input("> ")
         
-        # If user input is empty, use default
+        # If user input is empty, prompt again
         if user_input.strip():
             page_id = user_input.strip()
             print(f"Using provided page ID: {page_id}")
         else:
-            print(f"Using default page ID: {page_id}")
+            print("❌ Error: Page ID is required. Please provide a Notion page ID.")
+            return
     
     # Generate unique user and session IDs for this terminal session
     user_id = f"user_{uuid.uuid4().hex[:8]}"
@@ -68,7 +70,7 @@ async def main():
     # Start the MCP Tools session
     async with MCPTools(server_params=server_params) as mcp_tools:
         print("Connected to Notion MCP server successfully!")
-        
+        db = SqliteDb(db_file="agno.db") # SQLite DB for memory
         # Create the agent
         agent = Agent(
             name="NotionDocsAgent",
@@ -97,10 +99,10 @@ async def main():
                 The user's current page ID is: {page_id}
             """),
             markdown=True,
-            show_tool_calls=True,
             retries=3,
-            memory=Memory(),  # Use Memory v2 for better multi-session support
-            add_history_to_messages=True,  # Include conversation history
+            db=db,
+            enable_user_memories=True, # This enables Memory for the Agent
+            add_history_to_context=True,  # Include conversation history
             num_history_runs=5,  # Keep track of the last 5 interactions
         )
         
