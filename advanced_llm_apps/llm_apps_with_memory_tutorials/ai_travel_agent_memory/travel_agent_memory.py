@@ -70,9 +70,9 @@ if openai_api_key:
         relevant_memories = memory.search(query=prompt, user_id=user_id)
         context = "Relevant past information:\n"
         if relevant_memories and "results" in relevant_memories:
-            for memory in relevant_memories["results"]:
-                if "memory" in memory:
-                    context += f"- {memory['memory']}\n"
+            for mem in relevant_memories["results"]:
+                if "memory" in mem:
+                    context += f"- {mem['memory']}\n"
 
         # Prepare the full prompt
         full_prompt = f"{context}\nHuman: {prompt}\nAI:"
@@ -85,6 +85,8 @@ if openai_api_key:
                 {"role": "user", "content": full_prompt}
             ]
         )
+        if not response.choices or response.choices[0].message.content is None:
+            raise ValueError("Received empty or null response from OpenAI API")
         answer = response.choices[0].message.content
 
         # Add assistant response to chat history

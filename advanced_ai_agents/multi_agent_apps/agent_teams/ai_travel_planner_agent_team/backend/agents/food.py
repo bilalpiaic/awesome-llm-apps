@@ -108,7 +108,6 @@ dining_agent = Agent(
       Use emojis and clear formatting for better readability.
     """,
     markdown=True,
-    show_tool_calls=True,
     debug_mode=True,
     retries=3,
     delay_between_retries=2,

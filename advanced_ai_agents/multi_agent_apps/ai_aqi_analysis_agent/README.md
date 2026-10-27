@@ -1,5 +1,9 @@
 # 🌍 AQI Analysis Agent
 
+### 🎓 FREE Step-by-Step Tutorial 
+**👉 [Click here to follow our complete step-by-step tutorial](https://www.theunwindai.com/p/build-an-aqi-analysis-agent) and learn how to build this from scratch with detailed code walkthroughs, explanations, and best practices.**
+
+
 The AQI Analysis Agent is a powerful air quality monitoring and health recommendation tool powered by Firecrawl and Agno's AI Agent framework. This app helps users make informed decisions about outdoor activities by analyzing real-time air quality data and providing personalized health recommendations.
 
 ## Features
@@ -37,7 +41,7 @@ Follow these steps to set up and run the application:
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/Shubhamsaboo/awesome-llm-apps.git
-   cd ai_agent_tutorials/ai_aqi_analysis_agent
+   cd advanced_ai_agents/multi_agent_apps/ai_aqi_analysis_agent
    ```
 
 2. **Install the dependencies**:
@@ -51,7 +55,7 @@ Follow these steps to set up and run the application:
 
 4. **Run the Gradio app**:
     ```bash
-    python ai_aqi_analysis_agent.py
+    python ai_aqi_analysis_agent_gradio.py
     ```
 
 5. **Access the Web Interface**:

@@ -1,4 +1,5 @@
 ## 🛫 AI Travel Agent
+
 This Streamlit app is an AI-powered travel Agent that generates personalized travel itineraries using OpenAI GPT-4o. It automates the process of researching, planning, and organizing your dream vacation, allowing you to explore exciting destinations with ease.
 
 ### Features
@@ -13,7 +14,7 @@ This Streamlit app is an AI-powered travel Agent that generates personalized tra
 
 ```bash
 git clone https://github.com/Shubhamsaboo/awesome-llm-apps.git
-cd awesome-llm-apps/ai_agent_tutorials/ai_travel_agent
+cd awesome-llm-apps/starter_ai_agents/ai_travel_agent
 ```
 2. Install the required dependencies:
 

@@ -1,11 +1,14 @@
 # 🏚️ 🍌 AI Home Renovation Planner Agent 
 
-A multi-agent system built with Google ADK that analyzes photos of your space, creates personalized renovation plans, and generates photorealistic renderings using Gemini 2.5 Flash's multimodal capabilities.
+### 🎓 FREE Step-by-Step Tutorial 
+**👉 [Click here to follow our complete step-by-step tutorial](https://www.theunwindai.com/p/build-an-ai-home-renovation-planner-agent-using-nano-banana) and learn how to build this from scratch with detailed code walkthroughs, explanations, and best practices.**
+
+A multi-agent system built with Google ADK that analyzes photos of your space, creates personalized renovation plans, and generates photorealistic renderings using Gemini 3 Flash and Gemini 3 Pro's multimodal capabilities.
 
 ## Features
 
 - **🔍 Smart Image Analysis**: Upload room photos and inspiration images - agent automatically detects and analyzes them
-- **🎨 Photorealistic Rendering**: Generates professional-quality images of your renovated space using Gemini 2.5 Flash
+- **🎨 Photorealistic Rendering**: Generates professional-quality images of your renovated space using Gemini 3 Pro
 - **💰 Budget-Aware Planning**: Tailors recommendations to your budget constraints
 - **📊 Complete Roadmap**: Provides timeline, budget breakdown, contractor list, and action checklist
 - **🤖 Multi-Agent Orchestration**: Demonstrates Coordinator/Dispatcher + Sequential Pipeline patterns

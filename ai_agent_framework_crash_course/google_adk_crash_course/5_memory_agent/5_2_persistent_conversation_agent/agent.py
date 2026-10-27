@@ -17,7 +17,7 @@ session_service = DatabaseSessionService(
 # Create a simple agent with persistent memory
 agent = LlmAgent(
     name="persistent_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3-flash-preview",
     description="A simple agent that remembers conversations in a database",
     instruction="You are a helpful assistant. Remember what users tell you and reference it in future conversations. Your memory persists across program restarts."
 )
@@ -71,9 +71,9 @@ async def chat(user_id: str, message: str) -> str:
 # Test the persistent memory
 if __name__ == "__main__":
     async def test():
-        # Initialize database
-        await session_service.initialize()
-        print("✅ Database initialized")
+        # DatabaseSessionService creates its tables in the constructor;
+        # no explicit initialization call is needed.
+        print("✅ Database ready")
         
         user_id = "test_user"
         messages = ["My name is Bob", "What's my name?", "I love coding", "What do I love?"]

@@ -110,7 +110,7 @@ class GenerateRenovationRenderingInput(BaseModel):
 
 
 class EditRenovationRenderingInput(BaseModel):
-    artifact_filename: str = Field(..., description="The filename of the rendering artifact to edit.")
+    artifact_filename: str = Field(default=None, description="The filename of the rendering artifact to edit. If not provided, uses the last generated rendering.")
     prompt: str = Field(..., description="The prompt describing the desired changes (e.g., 'make cabinets darker', 'add pendant lights', 'change floor to hardwood').")
     asset_name: str = Field(default=None, description="Optional: specify asset name for the new version (defaults to incrementing current asset).")
     reference_image_filename: str = Field(default=None, description="Optional: filename of a reference image to guide the edit. Use 'latest' for most recent upload.")
@@ -124,7 +124,7 @@ async def generate_renovation_rendering(tool_context: ToolContext, inputs: Gener
     """
     Generates a photorealistic rendering of a renovated space based on the design plan.
     
-    This tool uses Gemini 2.5 Flash's image generation capabilities to create visual 
+    This tool uses Gemini 3 Pro's image generation capabilities to create visual 
     representations of renovation plans. It can optionally use current room photos 
     and inspiration images as references.
     """
@@ -134,7 +134,10 @@ async def generate_renovation_rendering(tool_context: ToolContext, inputs: Gener
     logger.info("Starting renovation rendering generation")
     try:
         client = genai.Client()
-        inputs = GenerateRenovationRenderingInput(**inputs)
+        
+        # Handle inputs that might come as dict instead of Pydantic model
+        if isinstance(inputs, dict):
+            inputs = GenerateRenovationRenderingInput(**inputs)
         
         # Handle reference images (current room photo or inspiration)
         reference_images = []
@@ -157,37 +160,65 @@ async def generate_renovation_rendering(tool_context: ToolContext, inputs: Gener
                     reference_images.append(inspiration_part)
                     logger.info(f"Using inspiration image: {insp_filename}")
         
-        # Build the enhanced prompt
+        # Build the enhanced prompt using SLC formula (Subject, Lighting, Camera)
         base_rewrite_prompt = f"""
-        Create a highly detailed, photorealistic prompt for generating an interior design image.
+        Create an ultra-detailed, photorealistic prompt for generating a professional interior design photograph.
         
         Original description: {inputs.prompt}
         
-        Enhance this to be a professional interior photography prompt that includes:
-        - Specific camera angle (wide-angle, eye-level perspective)
-        - Exact colors and materials mentioned
-        - Realistic lighting (natural light from windows, fixture types)
-        - Spatial layout and dimensions
-        - Texture and finish details
-        - Professional interior design photography quality
+        **CRITICAL REQUIREMENT - PRESERVE EXACT LAYOUT:**
+        The generated image MUST maintain the EXACT same room layout, structure, and spatial arrangement described in the prompt:
+        - Keep all windows, doors, skylights in their exact positions
+        - Keep all cabinets, counters, appliances in their exact positions
+        - Keep the same room dimensions and proportions
+        - Keep the same camera angle/perspective
+        - ONLY change surface finishes: paint colors, cabinet colors, countertop materials, flooring, backsplash, hardware, and decorative elements
+        - DO NOT move, add, or remove any structural elements or major fixtures
         
-        Aspect ratio: {inputs.aspect_ratio}
+        **Use the SLC Formula for Photorealism:**
+        
+        1. **SUBJECT (S)** - Be highly specific about details and textures:
+           - Describe exact materials with rich adjectives (e.g., "smooth matte white shaker-style cabinets", "honed Carrara marble countertops with subtle grey veining")
+           - Include texture details (e.g., "brushed nickel hardware", "wide-plank oak flooring with natural grain")
+           - Specify finishes precisely (e.g., "satin finish", "polished", "matte", "textured")
+        
+        2. **LIGHTING (L)** - Describe lighting conditions that create mood and realism:
+           - Natural light sources (e.g., "soft morning sunlight streaming through windows", "golden hour warm glow")
+           - Artificial lighting (e.g., "warm LED under-cabinet lighting", "pendant lights casting gentle shadows")
+           - Light quality (e.g., "diffused natural light", "dramatic side lighting", "even ambient illumination")
+           - Shadows and highlights (e.g., "subtle shadows adding depth", "highlights on polished surfaces")
+        
+        3. **CAMERA (C)** - Include professional photography specifications:
+           - Camera type: "shot on professional DSLR" or "architectural photography camera"
+           - Resolution: "8K resolution", "ultra high definition", "HDR"
+           - Perspective: specific angle (e.g., "wide-angle lens from doorway", "eye-level perspective", "slightly elevated view")
+           - Depth of field: "sharp focus throughout" or "shallow depth of field with background blur"
+           - Quality keywords: "professional interior design photography", "magazine quality", "architectural digest style"
+        
+        **Additional Requirements:**
+        - Maintain existing spatial layout and dimensions exactly as described
+        - Include specific color names and codes when mentioned
+        - Add atmospheric details (e.g., "clean, inviting atmosphere", "modern luxury feel")
+        - Specify the aspect ratio: {inputs.aspect_ratio}
+        
+        **Output Format:** Create a single, flowing paragraph that reads like a professional photography brief. 
+        Start with the camera/technical specs, then describe the subject with rich detail, then lighting conditions.
+        Include keywords: "photorealistic", "8K", "HDR", "professional interior photography", "architectural photography".
+        Emphasize that the layout must remain unchanged - only surface finishes are modified.
         """
         
         if reference_images:
-            base_rewrite_prompt += "\nUse the provided reference image(s) as inspiration for style, layout, or visual elements."
-        
-        base_rewrite_prompt += "\n\n**Important:** Output your prompt as a single detailed paragraph optimized for photorealistic interior rendering."
+            base_rewrite_prompt += "\n\n**Reference Image Layout:** The reference image shows the EXACT layout that must be preserved. Match the camera angle, room structure, window/door positions, and furniture/appliance placement EXACTLY. Only change the surface finishes and colors. Analyze the lighting in the reference image and replicate it."
         
         # Get enhanced prompt
         rewritten_prompt_response = client.models.generate_content(
-            model="gemini-2.5-flash", 
+            model="gemini-3-pro-preview", 
             contents=base_rewrite_prompt
         )
         rewritten_prompt = rewritten_prompt_response.text
         logger.info(f"Enhanced prompt: {rewritten_prompt}")
 
-        model = "gemini-2.5-flash-image"
+        model = "gemini-3-pro-image-preview"
         
         # Build content parts
         content_parts = [types.Part.from_text(text=rewritten_prompt)]
@@ -229,11 +260,14 @@ async def generate_renovation_rendering(tool_context: ToolContext, inputs: Gener
                 inline_data = chunk.candidates[0].content.parts[0].inline_data
                 
                 # Create a Part object from the inline data
+                # The inline_data already contains the mime_type from the API response
                 image_part = types.Part(inline_data=inline_data)
                 
                 try:
-                    # Save the image as an artifact
-                    version = await tool_context.save_artifact(
+                    # Save the image as an artifact. Do NOT rebind `version` from
+                    # the return value: that is ADK's per-filename artifact revision,
+                    # not our asset version counter (already set by get_next_version_number).
+                    await tool_context.save_artifact(
                         filename=artifact_filename, 
                         artifact=image_part
                     )
@@ -247,7 +281,7 @@ async def generate_renovation_rendering(tool_context: ToolContext, inputs: Gener
                     
                     logger.info(f"Saved rendering as artifact '{artifact_filename}' (version {version})")
                     
-                    return f"✅ Renovation rendering generated successfully!\n\nSaved as: **{artifact_filename}** (version {version} of {inputs.asset_name})\n\nThis photorealistic rendering shows your renovated space based on the design plan."
+                    return f"✅ Renovation rendering generated successfully!\n\nThe rendering has been saved and is available in the artifacts panel. Artifact name: {inputs.asset_name} (version {version}).\n\nNote: The image is stored as an artifact and can be accessed through the session artifacts, not as a direct image link."
                     
                 except Exception as e:
                     logger.error(f"Error saving artifact: {e}")
@@ -282,17 +316,69 @@ async def edit_renovation_rendering(tool_context: ToolContext, inputs: EditRenov
 
     try:
         client = genai.Client()
-        inputs = EditRenovationRenderingInput(**inputs)
+        
+        # Handle inputs that might come as dict instead of Pydantic model
+        if isinstance(inputs, dict):
+            inputs = EditRenovationRenderingInput(**inputs)
+        
+        # Get artifact_filename from session state if not provided
+        artifact_filename = inputs.artifact_filename
+        if not artifact_filename:
+            artifact_filename = tool_context.state.get("last_generated_rendering")
+            if not artifact_filename:
+                return "❌ No artifact_filename provided and no previous rendering found in session. Please generate a rendering first using generate_renovation_rendering."
+            logger.info(f"Using last generated rendering from session: {artifact_filename}")
+        
+        # Validate filename format - check for common hallucination patterns
+        if "_v0." in artifact_filename:
+            # Version 0 doesn't exist - the first version is always v1
+            logger.warning(f"Invalid version v0 detected in filename: {artifact_filename}")
+            corrected_filename = artifact_filename.replace("_v0.", "_v1.")
+            logger.info(f"Attempting corrected filename: {corrected_filename}")
+            artifact_filename = corrected_filename
         
         # Load the existing rendering
-        logger.info(f"Loading artifact: {inputs.artifact_filename}")
+        logger.info(f"Loading artifact: {artifact_filename}")
+        loaded_image_part = None
         try:
-            loaded_image_part = await tool_context.load_artifact(inputs.artifact_filename)
-            if not loaded_image_part:
-                return f"❌ Could not find rendering artifact: {inputs.artifact_filename}"
+            loaded_image_part = await tool_context.load_artifact(artifact_filename)
         except Exception as e:
             logger.error(f"Error loading artifact: {e}")
-            return f"Error loading rendering artifact: {e}"
+        
+        # If loading failed, try to find the most recent version of this asset
+        if not loaded_image_part:
+            # Extract base asset name and try to find any existing version
+            base_name = artifact_filename.split('_v')[0] if '_v' in artifact_filename else artifact_filename.replace('.png', '')
+            asset_filenames = tool_context.state.get("asset_filenames", {})
+            
+            # Check if we have any version of this asset
+            if base_name in asset_filenames:
+                fallback_filename = asset_filenames[base_name]
+                logger.info(f"Attempting fallback to known artifact: {fallback_filename}")
+                try:
+                    loaded_image_part = await tool_context.load_artifact(fallback_filename)
+                    if loaded_image_part:
+                        artifact_filename = fallback_filename
+                        logger.info(f"Successfully loaded fallback artifact: {fallback_filename}")
+                except Exception as e:
+                    logger.error(f"Fallback load also failed: {e}")
+            
+            # Last resort: try the last generated rendering
+            if not loaded_image_part:
+                last_rendering = tool_context.state.get("last_generated_rendering")
+                if last_rendering and last_rendering != artifact_filename:
+                    logger.info(f"Attempting last resort fallback to: {last_rendering}")
+                    try:
+                        loaded_image_part = await tool_context.load_artifact(last_rendering)
+                        if loaded_image_part:
+                            artifact_filename = last_rendering
+                            logger.info(f"Successfully loaded last resort artifact: {last_rendering}")
+                    except Exception as e:
+                        logger.error(f"Last resort load also failed: {e}")
+        
+        if not loaded_image_part:
+            available_renderings = get_asset_versions_info(tool_context)
+            return f"❌ Could not find rendering artifact: {inputs.artifact_filename}\n\n{available_renderings}\n\nPlease use one of the available artifact filenames, or generate a new rendering first."
 
         # Handle reference image if specified
         reference_image_part = None
@@ -307,7 +393,7 @@ async def edit_renovation_rendering(tool_context: ToolContext, inputs: EditRenov
                 if reference_image_part:
                     logger.info(f"Using reference image for editing: {ref_filename}")
 
-        model = "gemini-2.5-flash-image"
+        model = "gemini-3-pro-image-preview"
 
         # Build content parts
         content_parts = [loaded_image_part, types.Part.from_text(text=inputs.prompt)]
@@ -337,7 +423,7 @@ async def edit_renovation_rendering(tool_context: ToolContext, inputs: EditRenov
                 asset_name = current_asset_name
             else:
                 # Extract from filename
-                base_name = inputs.artifact_filename.split('_v')[0] if '_v' in inputs.artifact_filename else "renovation_rendering"
+                base_name = artifact_filename.split('_v')[0] if '_v' in artifact_filename else "renovation_rendering"
                 asset_name = base_name
         
         version = get_next_version_number(tool_context, asset_name)
@@ -361,12 +447,15 @@ async def edit_renovation_rendering(tool_context: ToolContext, inputs: EditRenov
                 inline_data = chunk.candidates[0].content.parts[0].inline_data
                 
                 # Create a Part object from the inline data
+                # The inline_data already contains the mime_type from the API response
                 edited_image_part = types.Part(inline_data=inline_data)
                 
                 try:
-                    # Save the edited image as an artifact
-                    version = await tool_context.save_artifact(
-                        filename=edited_artifact_filename, 
+                    # Save the edited image as an artifact. Do NOT rebind `version`
+                    # from the return value (ADK's per-filename revision); keep the
+                    # asset version from get_next_version_number above.
+                    await tool_context.save_artifact(
+                        filename=edited_artifact_filename,
                         artifact=edited_image_part
                     )
                     
@@ -379,7 +468,7 @@ async def edit_renovation_rendering(tool_context: ToolContext, inputs: EditRenov
                     
                     logger.info(f"Saved edited rendering as artifact '{edited_artifact_filename}' (version {version})")
                     
-                    return f"✅ Rendering edited successfully!\n\nSaved as: **{edited_artifact_filename}** (version {version} of {asset_name})\n\nThe rendering has been updated based on your feedback."
+                    return f"✅ Rendering edited successfully!\n\nThe updated rendering has been saved and is available in the artifacts panel. Artifact name: {asset_name} (version {version}).\n\nNote: The image is stored as an artifact and can be accessed through the session artifacts, not as a direct image link."
                     
                 except Exception as e:
                     logger.error(f"Error saving edited artifact: {e}")

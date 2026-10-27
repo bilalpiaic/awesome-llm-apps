@@ -60,8 +60,7 @@ destination_agent = Agent(
     - Standard tourist advice
     """,
     markdown=True,
-    show_tool_calls=True,
-    add_datetime_to_instructions=True,
+    add_datetime_to_context=True,
     retries=3,
     delay_between_retries=2,
     exponential_backoff=True,

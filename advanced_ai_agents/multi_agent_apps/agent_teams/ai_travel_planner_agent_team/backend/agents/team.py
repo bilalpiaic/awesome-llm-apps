@@ -32,7 +32,6 @@ trip_planning_team = Team(
         flight_search_agent,
         itinerary_agent,
     ],
-    show_tool_calls=True,
     markdown=True,
     description=(
         "You are the lead orchestrator of the TripCraft AI planning team. "
@@ -312,23 +311,11 @@ Format the entire itinerary with:
 • Local emergency numbers
 • Relevant photos and maps
 """,
-    success_criteria=[
-        "✅ Complete itinerary with all travel days and activities",
-        "✅ Stays within budget constraints",
-        "✅ Matches user priorities and travel style",
-        "✅ Well-structured daily schedule matching user's pace",
-        "✅ Real flights and accommodations with costs and links",
-        "✅ Daily activities aligned with selected vibes",
-        "✅ Clear Markdown format with good visuals",
-        "✅ Realistic budget breakdown",
-        "✅ Personalized tips based on user profile",
-        "✅ Verified, real-world locations only",
-    ],
-    enable_agentic_context=True,
+    enable_agentic_state=True,
     share_member_interactions=True,
     show_members_responses=True,
-    add_datetime_to_instructions=True,
-    add_member_tools_to_system_message=True,
+    add_datetime_to_context=True,
+    add_member_tools_to_context=True,
     # debug_mode=True,
     telemetry=False,
 )

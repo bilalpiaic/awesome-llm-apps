@@ -113,7 +113,7 @@ def on_agent_end(agent_name: str, result: str):
 # Register callbacks
 agent = LlmAgent(
     name="my_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3-flash-preview",
     on_start=on_agent_start,
     on_end=on_agent_end
 )
@@ -130,7 +130,7 @@ def on_llm_response(model: str, response: str, tokens: int):
 # Register callbacks
 agent = LlmAgent(
     name="my_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3-flash-preview",
     on_llm_request=on_llm_request,
     on_llm_response=on_llm_response
 )
@@ -147,7 +147,7 @@ def on_tool_end(tool_name: str, result: str):
 # Register callbacks
 agent = LlmAgent(
     name="my_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3-flash-preview",
     tools=[my_tool],
     on_tool_start=on_tool_start,
     on_tool_end=on_tool_end
@@ -178,9 +178,9 @@ agent = LlmAgent(
 
 After completing this tutorial, you'll be ready for:
 
-- **[Advanced Agent Patterns](../advanced_patterns/README.md)** - Complex agent architectures
-- **[Production Deployment](../deployment/README.md)** - Deploying agents to production
-- **[Custom Tools](../custom_tools/README.md)** - Building custom tools and integrations
+- **[Advanced Agent Patterns](../6_callbacks/README.md)** - Complex agent architectures
+- **[Production Deployment](../7_plugins/README.md)** - Deploying agents to production
+- **[Custom Tools](../4_tool_using_agent/README.md)** - Building custom tools and integrations
 
 ## 📚 Additional Resources
 

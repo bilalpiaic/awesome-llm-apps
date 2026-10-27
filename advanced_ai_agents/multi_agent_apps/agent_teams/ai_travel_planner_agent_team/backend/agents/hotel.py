@@ -74,7 +74,6 @@ hotel_search_agent = Agent(
       - url (str): The url of the hotel
     """,
     markdown=True,
-    show_tool_calls=True,
     debug_mode=True,
     retries=3,
     delay_between_retries=2,

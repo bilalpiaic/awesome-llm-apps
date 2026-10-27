@@ -119,8 +119,7 @@ itinerary_agent = Agent(
         - **Backup Plans**: {alternative schedules for weather/closures}
         """
     ),
-    add_datetime_to_instructions=True,
-    show_tool_calls=True,
+    add_datetime_to_context=True,
     retries=2,
     delay_between_retries=2,
     exponential_backoff=True,

@@ -196,7 +196,7 @@ calculator_function_tool = FunctionTool(func=calculator_tool)
 
 agent = LlmAgent(
     name="multi_tool_agent",
-    model="gemini-2.5-flash",
+    model="gemini-3-flash-preview",
     tools=[calculator_function_tool, weather_function_tool],
     before_tool_callback=before_tool_callback,
     after_tool_callback=after_tool_callback
@@ -243,9 +243,9 @@ def after_tool_callback(tool: BaseTool, args: dict, tool_context: ToolContext, t
 
 After completing this tutorial, you'll be ready for:
 
-- **[Advanced Tool Patterns](../advanced_tool_patterns/README.md)** - Complex tool architectures
-- **[Custom Tool Development](../custom_tools/README.md)** - Building custom tools
-- **[Tool Integration](../tool_integration/README.md)** - Integrating external APIs
+- **[Advanced Tool Patterns](../../4_tool_using_agent/README.md)** - Complex tool architectures
+- **[Custom Tool Development](../../4_tool_using_agent/README.md)** - Building custom tools
+- **[Tool Integration](../../4_tool_using_agent/README.md)** - Integrating external APIs
 
 ## 📚 Additional Resources
 

@@ -1,5 +1,8 @@
 ## 🎙️ Voice RAG with OpenAI SDK
 
+### 🎓 FREE Step-by-Step Tutorial 
+**👉 [Click here to follow our complete step-by-step tutorial](https://www.theunwindai.com/p/build-a-voice-rag-agent) and learn how to build this from scratch with detailed code walkthroughs, explanations, and best practices.**
+
 This script demonstrates how to build a voice-enabled Retrieval-Augmented Generation (RAG) system using OpenAI's SDK and Streamlit. The application allows users to upload PDF documents, ask questions, and receive both text and voice responses using OpenAI's text-to-speech capabilities.
 
 ### Features
@@ -17,7 +20,7 @@ This script demonstrates how to build a voice-enabled Retrieval-Augmented Genera
 1. Clone the GitHub repository
 ```bash
 git clone https://github.com/Shubhamsaboo/awesome-llm-apps.git
-cd awesome-llm-apps/rag_tutorials/voice_rag_openaisdk
+cd awesome-llm-apps/voice_ai_agents/voice_rag_openaisdk
 ```
 
 2. Install the required dependencies:
